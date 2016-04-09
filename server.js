@@ -1,14 +1,27 @@
+'use strict';
+
 var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var db = require('./db');
 var fs = require('fs');
+var http = require('http');
 var https = require('https');
+var nunjucks = require('nunjucks');
 
-var privateKey  = fs.readFileSync('/etc/letsencrypt/live/ogilvie.us.com/privkey.pem', 'utf8');
-var certificate = fs.readFileSync('/etc/letsencrypt/live/ogilvie.us.com/cert.pem', 'utf8');
 
-var credentials = {key: privateKey, cert: certificate};
+var privateKey, certificate, credentials;
+if (process.argv[2] == 'local') {
+    privateKey = null;
+    certificate = null;
+    credentials = null;
+} else {
+    privateKey  = fs.readFileSync('/etc/letsencrypt/live/ogilvie.us.com/privkey.pem', 'utf8');
+    certificate = fs.readFileSync('/etc/letsencrypt/live/ogilvie.us.com/cert.pem', 'utf8');
+    credentials = {key: privateKey, cert: certificate};
+}
+
+
 
 
 // Configure the local strategy for use by Passport.
@@ -47,14 +60,13 @@ passport.deserializeUser(function(id, cb) {
 });
 
 
-
-
 // Create a new Express application.
 var app = express();
-
-// Configure view engine to render EJS templates.
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+// using nunjucks as the template engine
+nunjucks.configure('views', {
+    autoescape: true,
+    express: app
+});
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
@@ -71,12 +83,12 @@ app.use(passport.session());
 // Define routes.
 app.get('/',
   function(req, res) {
-    res.render('home', { user: req.user });
+    res.render('home.njk', { user: req.user });
   });
 
 app.get('/login',
   function(req, res){
-    res.render('login');
+    res.render('login.njk');
   });
 
 app.post('/login',
@@ -94,9 +106,19 @@ app.get('/logout',
 app.get('/profile',
   require('connect-ensure-login').ensureLoggedIn(),
   function(req, res){
-    res.render('profile', { user: req.user });
+    res.render('profile.njk', { user: req.user });
   });
 
-var httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(4002);
+var server;
+let port = 4002;
+if (process.argv[2] === 'local') {
+    server = http.createServer(app);
+    console.log(`Running http on port: ${port}`);
+}
+else {
+    server = https.createServer(credentials, app);
+    console.log(`Running https on port: ${port}`);
+}
+
+server.listen(port);
