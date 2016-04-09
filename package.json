@@ -1,21 +1,15 @@
 {
-  "name": "express-4.x-local-example",
-  "version": "0.0.0",
-  "description": "Express 4.x app using Passport for authentication with username and password.",
+  "name": "ScholarshipApplication",
+  "version": "0.1.0",
+  "description": "Gather Applicant info and submit it a Salesforce backend",
   "keywords": [
-    "example",
-    "express",
-    "passport"
   ],
-  "author": "Jared Hanson",
-  "license": "Unlicense",
-  "homepage": "https://github.com/passport/express-4.x-local-example",
+  "author": "Peter Ogilvie",
+  "license": "MIT License",
+  "homepage": "https://github.com/muchavie/ScholarshipApplicatio",
   "repository": {
     "type": "git",
-    "url": "git://github.com/passport/express-4.x-local-example.git"
-  },
-  "bugs": {
-    "url": "https://github.com/passport/express-4.x-local-example/issues"
+    "url": "git://github.com/muchavie/ScholarshipApplication"
   },
   "dependencies": {
     "body-parser": "^1.13.3",

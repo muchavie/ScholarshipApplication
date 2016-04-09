@@ -2,6 +2,13 @@ var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var db = require('./db');
+var fs = require('fs');
+var https = require('https');
+
+var privateKey  = fs.readFileSync('/etc/letsencrypt/live/ogilvie.us.com/privkey.pem', 'utf8');
+var certificate = fs.readFileSync('/etc/letsencrypt/live/ogilvie.us.com/cert.pem', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
 
 
 // Configure the local strategy for use by Passport.
@@ -71,13 +78,13 @@ app.get('/login',
   function(req, res){
     res.render('login');
   });
-  
-app.post('/login', 
+
+app.post('/login',
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
     res.redirect('/');
   });
-  
+
 app.get('/logout',
   function(req, res){
     req.logout();
@@ -90,4 +97,6 @@ app.get('/profile',
     res.render('profile', { user: req.user });
   });
 
-app.listen(3000);
+var httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(4002);
