@@ -1,8 +1,8 @@
-https://github.com/passport/express-4.x-local-example
+
 
 Thanks
 ------
-- Derived from Jered Hansen's Express / Passport demo
+- Derived from Jered Hansen's Express / Passport demo https://github.com/passport/express-4.x-local-example
 - Running https on Express: http://stackoverflow.com/questions/11744975/enabling-https-on-express-js
 
 Instructions
