@@ -23,7 +23,7 @@ Start the server.
 $ node server.js
 ```
 
-Open a web browser and navigate to [http://localhost:3000/](http://127.0.0.1:3000/)
+Open a web browser and navigate to [http://localhost:4002/](http://127.0.0.1:4002/)
 to see the example in action.  Log in using username `jack` and password `secret`.
 
 
